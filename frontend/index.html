@@ -19,7 +19,7 @@
   <script>
     fetch('/cicd/api/time')
       .then(r => r.json())
-      .then(d => { document.getElementById('time').innerText = d.time; })
+      .then(d => { document.getElementById('time').innerText = d.message.time; })
       .catch(e => { document.getElementById('time').innerText = 'API error: ' + e; });
   </script>
 
