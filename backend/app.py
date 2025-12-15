@@ -66,6 +66,7 @@ def users():
 
 @app.post('/api/users')
 def create_user():
+    """Create a user"""
     try:
         data = request.json
         username = data.get('username')
@@ -98,6 +99,26 @@ def create_user():
         return jsonify({"error": f"Database error: {db_err}"}), 500
     except Exception as e:
         return jsonify({"error": f"Server error: {str(e)}"}), 500
+    
+@app.get('/api/users')
+def get_users():
+    try:
+        conn = mysql.connector.connect(
+            host=DB_HOST,
+            user=DB_USER,
+            password=DB_PASSWORD,
+            database=DB_NAME,
+        )
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute("SELECT * FROM users")
+        users = cursor.fetchall()
+
+        cursor.close()
+        conn.close()
+        return jsonify({"users": users})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500        
+         
 
 if __name__ == '__main__':
     # Dev-only fallback

@@ -66,8 +66,54 @@
         'Error: ' + error.message;
     });
   });
-  
-
 </script>
+<div id="users-section">
+  <h3>All Users</h3>
+  <button onclick="loadUsers()">Load Users</button>
+  <div id="users-container">Click "Load Users" to see users...</div>
+</div>
+
+<script>
+  function loadUsers() {
+    fetch('/cicd/api/users')
+      .then(r => r.json())
+      .then(data => {
+        const container = document.getElementById('users-container');
+        
+        if (data.error) {
+          container.innerHTML = `<p style="color: red;">Error: ${data.error}</p>`;
+          return;
+        }
+        
+        if (data.users && data.users.length > 0) {
+          container.innerHTML = `
+            <p><strong>${data.users.length} users found:</strong></p>
+            <table border="1" style="border-collapse: collapse; width: 100%;">
+              <tr style="background-color: #f2f2f2;">
+                <th>ID</th>
+                <th>Name</th>
+              </tr>
+              ${data.users.map(user => `
+                <tr>
+                  <td>${user.id}</td>
+                  <td>${user.name}</td>
+                </tr>
+              `).join('')}
+            </table>
+          `;
+        } else {
+          container.innerHTML = '<p>No users found in database.</p>';
+        }
+      })
+      .catch(e => {
+        document.getElementById('users-container').innerHTML = 
+          'API error: ' + e.message;
+      });
+  }
+  
+  // Optional: Auto-load on page load
+  // loadUsers();
+</script>
+
 </body>
 </html>
