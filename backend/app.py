@@ -45,6 +45,25 @@ def index():
     cur.close(); conn.close()
     return jsonify(message=row[0])
 
+@app.get('/api/users')
+def users():
+    """Create users table"""
+    try:
+        conn = mysql.connector.connect(
+            host=DB_HOST,
+            user=DB_USER,
+            password=DB_PASSWORD,
+            database=DB_NAME,
+        )
+        cursor = conn.cursor()
+        cursor.execute("CREATE TABLE IF NOT EXISTS users (id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(100))")
+        conn.commit()
+        cursor.close()
+        conn.close()
+        return jsonify({"message": "Database initialized"})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 if __name__ == '__main__':
     # Dev-only fallback
     app.run(host='0.0.0.0', port=8000, debug=True)

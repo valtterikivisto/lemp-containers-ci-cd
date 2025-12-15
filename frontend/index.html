@@ -22,6 +22,13 @@
       .then(d => { document.getElementById('time').innerText = d.message.time; })
       .catch(e => { document.getElementById('time').innerText = 'API error: ' + e; });
   </script>
+  <div id="users">Loading users...</div>
+  <script>
+    fetch("cicd/api/users")
+      .then(r => r.json())
+      .then(d => { document.getElementById('users').innerText = d.message; })
+      .catch(e => { document.getElementById('users').innerText = 'API error: ' + e; });
+  </script>
 
 </body>
 </html>
